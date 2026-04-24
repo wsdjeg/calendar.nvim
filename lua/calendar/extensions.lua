@@ -70,7 +70,7 @@ function M.on_action(year, month, day)
       table.insert(actions, {
         name = extension .. '/' .. action,
         callback = callback,
-        date = { year, month, day },
+        date = { year = year, month = month, day = day },
       })
     end
   end
