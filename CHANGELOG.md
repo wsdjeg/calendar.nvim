@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.1](https://github.com/wsdjeg/calendar.nvim/compare/v0.2.0...v0.2.1) (2026-07-16)
+
+
+### Features
+
+* add adjacent_days ([e3accc6](https://github.com/wsdjeg/calendar.nvim/commit/e3accc6ab66338b47a930d36dbae72b434609fcb))
+* add close keymap ([ce17263](https://github.com/wsdjeg/calendar.nvim/commit/ce1726357ff371b1880c5ce4099b686a4167347f))
+* add extendable locales to config ([44c39aa](https://github.com/wsdjeg/calendar.nvim/commit/44c39aabb7688c2840f7608b31c12a34eb9d5535))
+* support `<LeftMouse>` keymap ([98f8319](https://github.com/wsdjeg/calendar.nvim/commit/98f831992b54e056d0e9c8137dab31955df7567b))
+* support `locale` option ([624b450](https://github.com/wsdjeg/calendar.nvim/commit/624b4502bd8d461fac6fba0cf9f3ccffbec554e2))
+* support loading extensions automatically ([edc40aa](https://github.com/wsdjeg/calendar.nvim/commit/edc40aa818f1f499569256ad9716789620b39179))
+
+
+### Bug Fixes
+
+* change calendar window default width ([e48d15a](https://github.com/wsdjeg/calendar.nvim/commit/e48d15ac75b6012df6c43cd4a1a543677f8bbace))
+* check locale is valid ([7507027](https://github.com/wsdjeg/calendar.nvim/commit/7507027a75e9ac0f62f0a7c4dc11ee01b75efe47))
+* fix LeftMouse key binding ([341edf5](https://github.com/wsdjeg/calendar.nvim/commit/341edf5c5411ce0444473b463c1f5301cc9d821a))
+* fix manual action callback date ([1c7dbc9](https://github.com/wsdjeg/calendar.nvim/commit/1c7dbc9a4c06537639c87e3061ac271077f3f5ac))
+* sync release-please manifest version to 0.2.0 ([39483cc](https://github.com/wsdjeg/calendar.nvim/commit/39483cce480bf8a63b5b2563eb8b490f017d3f67))
+
 ## [0.2.0](https://github.com/wsdjeg/calendar.nvim/compare/v0.1.0...v0.2.0) (2026-01-04)
 
 
