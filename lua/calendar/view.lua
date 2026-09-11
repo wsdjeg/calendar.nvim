@@ -55,8 +55,9 @@ local function right(str, width)
 end
 
 local function render_lines(year, month, grid)
-  local locale = require('calendar.config').get().locale
-  local locales = require('calendar.config').get().locales
+  local conf = require('calendar.config').get()
+  local locale = conf.locale
+  local locales = conf.locales
   local lines = {}
   local CALENDAR_WIDTH, WEEKDAY_WIDTH = 33, 3
 
@@ -72,14 +73,17 @@ local function render_lines(year, month, grid)
 
   table.insert(lines, '                                 ')
 
-  local pad_weekdays = function()
-    local weekdays = {}
-    for _, weekday in ipairs(locales[locale].weekdays) do
-      table.insert(weekdays, right(weekday, WEEKDAY_WIDTH))
-    end
-    return weekdays
+  -- weekdays are stored Monday-first, rotate them when the
+  -- calendar should start on Sunday
+  local weekdays = vim.list_extend({}, locales[locale].weekdays)
+  if conf.first_day_of_week == 'sunday' then
+    table.insert(weekdays, 1, table.remove(weekdays))
   end
-  local pad_weekdays_str = table.concat(pad_weekdays(), ' ')
+  local pad_weekdays = {}
+  for _, weekday in ipairs(weekdays) do
+    table.insert(pad_weekdays, right(weekday, WEEKDAY_WIDTH))
+  end
+  local pad_weekdays_str = table.concat(pad_weekdays, ' ')
   table.insert(lines, center(pad_weekdays_str, CALENDAR_WIDTH))
 
   table.insert(lines, '                                 ')

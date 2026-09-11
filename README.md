@@ -38,6 +38,7 @@ and a simple extension system for integrating your own workflows.
 - Marked days support
 - Extensible architecture
 - Configurable setup and keymaps
+- Configurable first day of the week (`monday` or `sunday`)
 - Pure Lua, lightweight, no dependencies
 
 ## 📦 Installation
@@ -56,6 +57,8 @@ require('calendar').setup({
   -- locale currently affects UI language only.
   locale = 'en-US', -- en-US | de-DE | en-GB | es-ES | fr-FR | it-IT | ja-JP | ko-KR | zh-CN | zh-TW | ru-RU
   show_adjacent_days = true,
+  -- the first day of the week column, 'monday' by default.
+  first_day_of_week = 'monday', -- 'monday' | 'sunday'
   -- calendar.nvim support vim style keyboard navigation, hjkl.
   keymap = {
     next_month = 'L',

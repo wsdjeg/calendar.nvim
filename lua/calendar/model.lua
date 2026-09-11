@@ -10,6 +10,20 @@ function M.month_info(year, month)
   }
 end
 
+--- compute the column (1-based) of the first day of the month,
+--- depending on the first_day_of_week config.
+---@param first_wday number weekday of the 1st day, %w format: 0 = Sunday, ..., 6 = Saturday
+---@return number column 1-7
+function M.first_day_column(first_wday)
+  local conf = require('calendar.config').get()
+  if conf.first_day_of_week == 'sunday' then
+    -- %w: Sunday is 0, so it lands on the first column
+    return first_wday + 1
+  end
+  -- Monday-first grid: Sunday is the last column
+  return first_wday == 0 and 7 or first_wday
+end
+
 function M.build_month_grid(year, month)
   local conf = require('calendar.config').get()
   local info = M.month_info(year, month)
@@ -22,7 +36,7 @@ function M.build_month_grid(year, month)
     end
   end
 
-  local start_col = info.first_wday == 0 and 7 or info.first_wday
+  local start_col = M.first_day_column(info.first_wday)
   local row, col = 1, start_col
 
   if conf.show_adjacent_days and start_col > 1 then

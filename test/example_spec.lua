@@ -53,6 +53,74 @@ function TestModel:test_build_month_grid()
   lu.assertEquals(grid.days, 31)
 end
 
+TestFirstDayOfWeek = {}
+
+function TestFirstDayOfWeek:tearDown()
+  -- restore the default so other test classes are not affected
+  require('calendar.config').setup({ first_day_of_week = 'monday' })
+end
+
+function TestFirstDayOfWeek:test_default_is_monday()
+  local config = require('calendar.config')
+  lu.assertEquals(config.get().first_day_of_week, 'monday')
+end
+
+function TestFirstDayOfWeek:test_invalid_value_errors()
+  local config = require('calendar.config')
+  lu.assertError(function()
+    config.setup({ first_day_of_week = 'friday' })
+  end)
+  -- config keeps the previous valid value
+  lu.assertEquals(config.get().first_day_of_week, 'monday')
+end
+
+function TestFirstDayOfWeek:test_monday_first_column()
+  local model = require('calendar.model')
+  require('calendar.config').setup({ first_day_of_week = 'monday' })
+  -- %w: 0 = Sunday ... 6 = Saturday
+  lu.assertEquals(model.first_day_column(0), 7)
+  lu.assertEquals(model.first_day_column(1), 1)
+  lu.assertEquals(model.first_day_column(6), 6)
+end
+
+function TestFirstDayOfWeek:test_sunday_first_column()
+  local model = require('calendar.model')
+  require('calendar.config').setup({ first_day_of_week = 'sunday' })
+  lu.assertEquals(model.first_day_column(0), 1)
+  lu.assertEquals(model.first_day_column(1), 2)
+  lu.assertEquals(model.first_day_column(6), 7)
+end
+
+function TestFirstDayOfWeek:test_monday_first_grid_june_2025()
+  local model = require('calendar.model')
+  require('calendar.config').setup({ first_day_of_week = 'monday' })
+  -- June 1, 2025 is a Sunday, the last column of a Monday-first week
+  local grid = model.build_month_grid(2025, 6)
+  lu.assertEquals(grid[1][7], '  1')
+  lu.assertEquals(grid[1][6], ' 31')
+end
+
+function TestFirstDayOfWeek:test_sunday_first_grid_june_2025()
+  local model = require('calendar.model')
+  require('calendar.config').setup({ first_day_of_week = 'sunday' })
+  -- June 1, 2025 is a Sunday, the first column of a Sunday-first week
+  local grid = model.build_month_grid(2025, 6)
+  lu.assertEquals(grid[1][1], '  1')
+  lu.assertEquals(grid[1][2], '  2')
+end
+
+function TestFirstDayOfWeek:test_sunday_first_grid_january_2025()
+  local model = require('calendar.model')
+  require('calendar.config').setup({ first_day_of_week = 'sunday' })
+  -- January 1, 2025 is a Wednesday, so Sunday/Tuesday columns
+  -- hold adjacent days of December 2024
+  local grid = model.build_month_grid(2025, 1)
+  lu.assertEquals(grid[1][1], ' 29')
+  lu.assertEquals(grid[1][2], ' 30')
+  lu.assertEquals(grid[1][3], ' 31')
+  lu.assertEquals(grid[1][4], '  1')
+end
+
 TestExtensions = {}
 
 function TestExtensions:test_mark_and_has_marks()
