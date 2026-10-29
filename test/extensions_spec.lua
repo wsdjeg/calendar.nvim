@@ -20,9 +20,9 @@ local function due_ext(state)
   }
 end
 
-TestExtensions = {}
+TestExtensionMarks = {}
 
-function TestExtensions:test_marks_recomputed_on_change()
+function TestExtensionMarks:test_marks_recomputed_on_change()
   local ext = fresh()
   local state = { days = { 3, 17 } }
   ext.register('due', due_ext(state))
@@ -39,7 +39,7 @@ function TestExtensions:test_marks_recomputed_on_change()
   lu.assertTrue(ext.has_marks(2026, 5, 17))
 end
 
-function TestExtensions:test_marks_do_not_leak_across_months()
+function TestExtensionMarks:test_marks_do_not_leak_across_months()
   local ext = fresh()
   ext.register('due', due_ext({ days = { 31 } }))
 
@@ -50,7 +50,7 @@ function TestExtensions:test_marks_do_not_leak_across_months()
   lu.assertNil(ext.has_marks(2026, 1, 31))
 end
 
-function TestExtensions:test_clear()
+function TestExtensionMarks:test_clear()
   local ext = fresh()
   ext.register('due', due_ext({ days = { 9 } }))
   ext.on_change(2026, 5)
@@ -59,19 +59,19 @@ function TestExtensions:test_clear()
   lu.assertNil(ext.has_marks(2026, 5, 9))
 end
 
-function TestExtensions:test_actions_only_extension_is_ignored_by_on_change()
+function TestExtensionMarks:test_actions_only_extension_is_ignored_by_on_change()
   local ext = fresh()
   ext.register('actions-only', { actions = {} })
   lu.assertNotNil(pcall(ext.on_change, 2026, 5))
 end
 
-function TestExtensions:test_extension_without_get_is_ignored()
+function TestExtensionMarks:test_extension_without_get_is_ignored()
   local ext = fresh()
   ext.register('no-get', {})
   lu.assertNotNil(pcall(ext.on_change, 2026, 5))
 end
 
-function TestExtensions:test_bad_marks_are_ignored()
+function TestExtensionMarks:test_bad_marks_are_ignored()
   local ext = fresh()
   ext.register('bad', {
     get = function()
@@ -81,3 +81,4 @@ function TestExtensions:test_bad_marks_are_ignored()
   ext.on_change(2026, 5)
   lu.assertTrue(ext.has_marks(2026, 5, 7))
 end
+
