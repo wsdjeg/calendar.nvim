@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.2](https://github.com/wsdjeg/calendar.nvim/compare/v0.2.1...v0.2.2) (2026-10-29)
+
+
+### Bug Fixes
+
+* **extensions:** recompute marks on every redraw ([e548533](https://github.com/wsdjeg/calendar.nvim/commit/e5485333d201b999a768cdfb57ccfb3a96d3b630))
+* **extensions:** recompute marks on every redraw ([ca1a393](https://github.com/wsdjeg/calendar.nvim/commit/ca1a393386de6cc8197ccf40559d1a0bd8926124))
+
+
+### Tests
+
+* **extensions:** avoid TestExtensions class name clash ([a1a41cf](https://github.com/wsdjeg/calendar.nvim/commit/a1a41cf60171a77b288a8e84ae08c5d4a4e6da38))
+
 ## [0.2.1](https://github.com/wsdjeg/calendar.nvim/compare/v0.2.0...v0.2.1) (2026-09-11)
 
 
