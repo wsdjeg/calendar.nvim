@@ -46,26 +46,50 @@ function M.register(name, ext)
   extensions.manual[name] = ext
 end
 
-function M.on_change(year, month)
-  extensions.auto = get_calendar_exts()
-  for _, ext in pairs(extensions.manual) do
-    local marks = ext.get(year, month)
-    for _, mark in ipairs(marks) do
+---清空已计算的标记（每次重绘前自动调用，一般无需手动调用）
+function M.clear()
+  marked_days = {}
+end
+
+---收集扩展返回的标记
+---@param ext table
+---@param year number
+---@param month number
+local function collect(ext, year, month)
+  if type(ext) ~= 'table' or type(ext.get) ~= 'function' then
+    return
+  end
+  local marks = ext.get(year, month)
+  if type(marks) ~= 'table' then
+    return
+  end
+  for _, mark in ipairs(marks) do
+    if type(mark) == 'table' then
       M.mark(mark.year, mark.month, mark.day)
     end
   end
+end
+
+function M.on_change(year, month)
+  -- 标记必须每次重绘从当前数据重算：marked_days 是模块级缓存，
+  -- 不重置的话，任务被删除/改期/切换项目后旧的标记会永久残留。
+  M.clear()
+  extensions.auto = get_calendar_exts()
+  for _, ext in pairs(extensions.manual) do
+    collect(ext, year, month)
+  end
   for _, ext in pairs(extensions.auto) do
-    local marks = ext.get(year, month)
-    for _, mark in ipairs(marks) do
-      M.mark(mark.year, mark.month, mark.day)
-    end
+    collect(ext, year, month)
   end
 end
 
 function M.on_action(year, month, day)
   extensions.auto = get_calendar_exts()
   local actions = {}
-  for extension, ext in pairs(extensions.manual) do
+  local function collect(extension, ext)
+    if type(ext) ~= 'table' or type(ext.actions) ~= 'table' then
+      return
+    end
     for action, callback in pairs(ext.actions) do
       table.insert(actions, {
         name = extension .. '/' .. action,
@@ -74,14 +98,11 @@ function M.on_action(year, month, day)
       })
     end
   end
+  for extension, ext in pairs(extensions.manual) do
+    collect(extension, ext)
+  end
   for extension, ext in pairs(extensions.auto) do
-    for action, callback in pairs(ext.actions) do
-      table.insert(actions, {
-        name = extension .. '/' .. action,
-        callback = callback,
-        date = { year = year, month = month, day = day },
-      })
-    end
+    collect(extension, ext)
   end
   vim.ui.select(actions, {
     prompt = 'calendar actions',
